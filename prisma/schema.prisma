@@ -1,0 +1,89 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  CANDIDATE
+  RECRUITER
+  ADMIN
+}
+
+enum JobType {
+  FULL_TIME
+  PART_TIME
+  INTERNSHIP
+  CONTRACT
+}
+
+enum ApplicationStatus {
+  APPLIED
+  SHORTLISTED
+  REJECTED
+  HIRED
+}
+
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  password  String
+  role      Role
+  name      String
+  createdAt DateTime @default(now())
+
+  candidateProfile CandidateProfile?
+  companyProfile   CompanyProfile?
+  applications     Application[]
+  jobsPosted       Job[]
+}
+
+model CandidateProfile {
+  id         String  @id @default(cuid())
+  userId     String  @unique
+  user       User    @relation(fields: [userId], references: [id])
+  bio        String?
+  skills     String[]
+  resumeUrl  String?
+  experience Int?
+}
+
+model CompanyProfile {
+  id          String  @id @default(cuid())
+  userId      String  @unique
+  user        User    @relation(fields: [userId], references: [id])
+  companyName String
+  logoUrl     String?
+  website     String?
+  about       String?
+}
+
+model Job {
+  id           String   @id @default(cuid())
+  title        String
+  description  String
+  requirements String
+  location     String
+  salaryMin    Int?
+  salaryMax    Int?
+  type         JobType
+  status       String   @default("OPEN")
+  postedById   String
+  postedBy     User     @relation(fields: [postedById], references: [id])
+  applications Application[]
+  createdAt    DateTime @default(now())
+}
+
+model Application {
+  id          String            @id @default(cuid())
+  jobId       String
+  job         Job               @relation(fields: [jobId], references: [id])
+  candidateId String
+  candidate   User              @relation(fields: [candidateId], references: [id])
+  resumeUrl   String?
+  status      ApplicationStatus @default(APPLIED)
+  appliedAt   DateTime          @default(now())
+}

@@ -1,0 +1,178 @@
+@import "tailwindcss";
+
+:root {
+  --ink: #0b0f1a;
+  --ink-raised: #131829;
+  --paper: #f7f5ef;
+  --line: rgba(255, 255, 255, 0.08);
+  --line-light: #e5e1d8;
+  --text-hi: #f5f3ec;
+  --text-soft: #a8adc0;
+  --brass: #e0a640;
+  --brass-glow: rgba(224, 166, 64, 0.35);
+  --violet: #8b7cf6;
+  --violet-glow: rgba(139, 124, 246, 0.35);
+  --forest: #3ecf8e;
+  --forest-glow: rgba(62, 207, 142, 0.3);
+  --rust: #ef6a5f;
+}
+
+@theme inline {
+  --color-ink: var(--ink);
+  --color-ink-raised: var(--ink-raised);
+  --color-paper: var(--paper);
+  --color-line: var(--line);
+  --color-text-hi: var(--text-hi);
+  --color-text-soft: var(--text-soft);
+  --color-brass: var(--brass);
+  --color-violet: var(--violet);
+  --color-forest: var(--forest);
+  --color-rust: var(--rust);
+  --font-serif: var(--font-serif);
+  --font-sans: var(--font-sans);
+}
+
+body {
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-sans), -apple-system, sans-serif;
+}
+
+h1, h2, h3, .font-display {
+  font-family: var(--font-serif), serif;
+}
+
+/* Animated gradient mesh background for dark sections */
+.mesh-bg {
+  position: relative;
+  background: var(--ink);
+  overflow: hidden;
+}
+
+.mesh-bg::before,
+.mesh-bg::after {
+  content: "";
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(90px);
+  opacity: 0.55;
+  z-index: 0;
+  animation: drift 16s ease-in-out infinite alternate;
+}
+
+.mesh-bg::before {
+  width: 520px;
+  height: 520px;
+  background: radial-gradient(circle, var(--brass-glow), transparent 70%);
+  top: -120px;
+  left: -80px;
+}
+
+.mesh-bg::after {
+  width: 460px;
+  height: 460px;
+  background: radial-gradient(circle, var(--violet-glow), transparent 70%);
+  bottom: -140px;
+  right: -60px;
+  animation-delay: -8s;
+}
+
+@keyframes drift {
+  from { transform: translate(0, 0) scale(1); }
+  to { transform: translate(40px, 30px) scale(1.08); }
+}
+
+.mesh-bg > * {
+  position: relative;
+  z-index: 1;
+}
+
+.glass {
+  background: rgba(255, 255, 255, 0.06);
+  backdrop-filter: blur(16px);
+  border: 1px solid var(--line);
+}
+
+@keyframes rise {
+  from { opacity: 0; transform: translateY(16px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-rise {
+  animation: rise 0.8s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+
+.animate-float {
+  animation: float 5s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-rise, .animate-float, .mesh-bg::before, .mesh-bg::after {
+    animation: none;
+  }
+}
+
+.transition-base {
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.glow-on-hover {
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.glow-on-hover:hover {
+  box-shadow: 0 0 0 1px var(--brass-glow), 0 8px 30px var(--brass-glow);
+  transform: translateY(-2px);
+}
+
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+
+.animate-marquee {
+  animation: marquee 28s linear infinite;
+}
+
+.marquee-mask {
+  mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
+  -webkit-mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
+}
+
+@keyframes bob {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-6px); }
+}
+
+@keyframes typeGlow {
+  0%, 100% { opacity: 0.4; }
+  50% { opacity: 1; }
+}
+
+@keyframes popIn {
+  0%, 70% { opacity: 0; transform: scale(0.8) translateY(6px); }
+  85%, 100% { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+@keyframes walk {
+  0% { transform: translateX(-20px); }
+  50% { transform: translateX(20px); }
+  100% { transform: translateX(-20px); }
+}
+
+.anim-bob { animation: bob 4s ease-in-out infinite; }
+.anim-bob-slow { animation: bob 5.5s ease-in-out infinite; }
+.anim-glow { animation: typeGlow 2.4s ease-in-out infinite; }
+.anim-pop { animation: popIn 4s ease-in-out infinite; }
+.anim-walk { animation: walk 8s ease-in-out infinite; }
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-marquee, .anim-bob, .anim-bob-slow, .anim-glow, .anim-pop, .anim-walk {
+    animation: none;
+  }
+}
